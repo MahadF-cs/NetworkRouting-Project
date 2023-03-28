@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Graph, Node, Edge } from "../types/types.js";
-import { djikstraAlgorithm } from "../algorithms/djikstra.js";
+import { djikstraAlgorithm } from   "../algorithms/djikstra.js";
 import Select from "react-select";
 
 interface CanvasProps {
