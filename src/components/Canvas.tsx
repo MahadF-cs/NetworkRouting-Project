@@ -1,19 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-
-interface Node {
-  x: number;
-  y: number;
-  radius: number;
-  color: string;
-  number: number;
-}
-
-interface Edge {
-  start: Node;
-  end: Node;
-  weight: number;
-  color: string;
-}
+import {Graph, Node, Edge} from "../types/types.js";
+import { djikstraAlgorithm } from "../algorithms/djikstra.js";
 
 interface CanvasProps {
   width: number;
@@ -179,7 +166,8 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     }
   };
 
-  console.log({ Nodes: nodes, Edges: edges });
+  // console.log({ Nodes: nodes, Edges: edges });
+  console.log(djikstraAlgorithm({ Nodes: nodes, Edges: edges }, 0, 2))
 
   return (
     <div className="flex flex-col">
