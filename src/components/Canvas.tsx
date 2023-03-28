@@ -116,7 +116,7 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
           y: event.nativeEvent.offsetY,
           radius: 20,
           color: "#98c1d9",
-          number: nodes.length - 1,
+          number: nodes.length,
         },
       ]);
     }
