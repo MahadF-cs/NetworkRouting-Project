@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Graph, Node, Edge } from "../types/types.js";
-import { djikstraAlgorithm } from   "../algorithms/djikstra.js";
+import { djikstraAlgorithm } from "../algorithms/djikstra.js";
 import Select from "react-select";
 
 interface CanvasProps {
@@ -227,41 +227,6 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
         >
           {updateWeights ? "Stop" : "Update Weights"}
         </button>
-      </div>
-
-      <canvas
-        ref={canvasRef}
-        onClick={handleCanvasClick}
-        width={width}
-        height={height}
-        style={{ border: "1px solid #ccc", display: "block", margin: "auto" }}
-      />
-
-      <div className="grid grid-cols-2 gap-7 m-10">
-        <button
-          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
-          onClick={() => {
-            setDjikstra(true);
-            setBellmanFord(false);
-            setAddNode(false);
-            setAddEdge(false);
-          }}
-        >
-          Djikstra Path
-        </button>
-        <button
-          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
-          onClick={() => {
-            setBellmanFord(true);
-            setDjikstra(false);
-            setAddNode(false);
-            setAddEdge(false);
-          }}
-        >
-          Bell-man Ford Path
-        </button>
-
-        {/* dropdown menu thaat has all the nodes */}
         <Select
           options={nodes.map((node) => ({
             value: node.number,
@@ -298,7 +263,37 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
             setEndNode(e?.value);
           }}
         />
+        <button
+          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
+          onClick={() => {
+            setDjikstra(true);
+            setBellmanFord(false);
+            setAddNode(false);
+            setAddEdge(false);
+          }}
+        >
+          Djikstra Path
+        </button>
+        <button
+          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
+          onClick={() => {
+            setBellmanFord(true);
+            setDjikstra(false);
+            setAddNode(false);
+            setAddEdge(false);
+          }}
+        >
+          Bell-man Ford Path
+        </button>
       </div>
+
+      <canvas
+        ref={canvasRef}
+        onClick={handleCanvasClick}
+        width={width}
+        height={height}
+        style={{ border: "1px solid #ccc", display: "block", margin: "auto" }}
+      />
     </div>
   );
 };

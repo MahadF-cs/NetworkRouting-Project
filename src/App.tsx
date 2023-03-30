@@ -10,7 +10,8 @@ function App() {
       {/* <header>
         <p className="text-5xl font-bold mt-0 mb-6"> CPS 706 - Project </p>
       </header> */}
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center">
+        <h2>Djikstra's and Bellman Ford Demo</h2>
         <Canvas width={900} height={600} />
       </div>
     </div>
