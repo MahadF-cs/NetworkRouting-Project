@@ -9,7 +9,7 @@ interface CanvasProps {
 }
 
 const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
-  const [nodes, setnodes] = useState<Node[]>([]);
+  const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
@@ -97,7 +97,7 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     // if add node button is clicked add a node
     if (addNode) {
       // update nodes list with mouseclick coordinates
-      setnodes([
+      setNodes([
         ...nodes,
         {
           x: event.nativeEvent.offsetX,
@@ -105,6 +105,7 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
           radius: 20,
           color: "#98c1d9",
           number: nodes.length,
+          distance: Infinity,
         },
       ]);
     }
@@ -167,8 +168,14 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     }
   };
 
-  // console.log({ Nodes: nodes, Edges: edges });
-  console.log(djikstraAlgorithm({ Nodes: nodes, Edges: edges }, 0, 2));
+  // create a new graph with the nodes and edges
+  const stateGraph: Graph = {
+    nodes: nodes,
+    edges: edges,
+  };
+  console.log(djikstraAlgorithm(stateGraph, nodes[0], nodes[nodes.length - 1]));
+
+  console.log(stateGraph);
 
   return (
     <div className="flex flex-col">
@@ -179,7 +186,7 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
             setClear(true);
             setAddNode(false);
             setAddEdge(false);
-            setnodes([]);
+            setNodes([]);
             setEdges([]);
             setSelectedEdge(null);
             setSelectedNode(null);

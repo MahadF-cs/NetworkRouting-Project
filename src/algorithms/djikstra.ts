@@ -1,70 +1,71 @@
-// @ts-nocheck
 import { Graph, Node, Edge } from "../types/types.js";
+import PriorityQueue from "priorityqueue";
 
-function convertObjectToEdgesList(graph) {
-  let edgesList = [];
-  let edges = graph.Edges;
-  for (let i = 0; i < edges.length; i++) {
-    let curr_edge = edges[i];
-    let start_node = curr_edge.start.number;
-    let end_node = curr_edge.end.number;
-    let weight = curr_edge.weight;
+function djikstraAlgorithm(currGraph: Graph, start: Node, end: Node) {
+  let distances: any = {};
+  let previous: any = {};
+  let unvisited = new PriorityQueue({
+    comparator: function (a: Node, b: Node) {
+      return a.distance - b.distance;
+    },
+  });
 
-    edgesList.push([start_node, end_node, weight]);
-  }
-  return edgesList;
-}
-
-function printDistanceArray(distance) {
-  for (let i = 0; i < distance.length; i++) {
-    console.log("distance[" + i + "] = " + distance[i]);
-  }
-}
-
-function djikstraAlgorithm(curr, start, end) {
-  // console.log("START", start);
-  // console.log("END", end);
-  //   console.log("curr", curr);
-
-  let distances = {};
-  let previous = {};
-
-  const edges = convertObjectToEdgesList(curr);
-  const num_vertices = curr.num_vertices;
-  const num_edges = curr.num_edges;
-
-  // initialize the queue
-  let queue = [];
-
-  for (let i = 0; i < num_vertices; i++) {
+  for (let i = 0; i < currGraph.nodes.length; i++) {
     distances[i] = Infinity;
     previous[i] = null;
   }
 
-  distances[start] = 0;
-  queue.push(start);
+  distances[start.number] = 0;
+  start.distance = 0;
+  unvisited.push(start);
 
-  while (queue.length > 0) {
-    let curr_node = queue.shift();
-    for (let i = 0; i < num_edges; i++) {
-      if (edges[i][0] == curr_node) {
-        let neighbor = edges[i][1];
-        let weight = edges[i][2];
-        let alt = distances[curr_node] + weight;
-        if (alt < distances[neighbor]) {
-          distances[neighbor] = alt;
-          previous[neighbor] = curr_node;
-          queue.push(neighbor);
-        }
+  while (unvisited.length > 0) {
+    const currNode = unvisited.pop();
+    // map all the edges that have the current node as the start node
+    let neighbours = currGraph.edges.filter((edge) => {
+      // return all edges that have the current node as the start node or the end node
+      return (
+        edge.start.number === currNode.number ||
+        edge.end.number === currNode.number
+      );
+    });
+
+    for (let i = 0; i < neighbours.length; i++) {
+      if (neighbours[i].start.number === currNode.number) {
+        var neighbour = neighbours[i].end;
+      } else {
+        var neighbour = neighbours[i].start;
+      }
+      let alt = distances[currNode.number] + neighbours[i].weight;
+      if (alt < distances[neighbour.number]) {
+        distances[neighbour.number] = alt;
+        previous[neighbour.number] = currNode;
+        neighbour.distance = alt;
+        unvisited.push(neighbour);
       }
     }
   }
 
-  for (let i = 0; i < distances.length; i++) {
-    console.log("distances[" + i + "] = " + distances[i]);
+  let path = [];
+  let curr = end;
+  while (curr !== null) {
+    path.push(curr);
+    curr = previous[curr.number];
   }
 
-  return curr;
+  // output the shortest path like this 1->2->3->4
+
+  let shortestPath = "";
+  for (let i = path.length - 1; i >= 0; i--) {
+    shortestPath += path[i].number;
+    if (i !== 0) {
+      shortestPath += "->";
+    }
+  }
+
+  console.log("shortest path", shortestPath);
+
+  return distances;
 }
 
 export { djikstraAlgorithm };
