@@ -1,3 +1,5 @@
+// make a node type taht can also be null
+
 interface Node {
   x: number;
   y: number;

@@ -173,9 +173,8 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     nodes: nodes,
     edges: edges,
   };
-  console.log(djikstraAlgorithm(stateGraph, nodes[0], nodes[nodes.length - 1]));
 
-  console.log(stateGraph);
+  // console.log(djikstraAlgorithm(stateGraph, nodes[0], nodes[nodes.length - 1]));
 
   return (
     <div className="flex flex-col">
