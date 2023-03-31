@@ -3,6 +3,7 @@ import graph1 from "./sampleGraph1.json" assert { type: "json" };
 // import example graph 2 json as a variable
 import graph2 from "./sampleGraph2.json" assert { type: "json" };
 
+
 // function to convert the graph to a edges list with each edge having format [start_node, end_node, weight]
 function convertObjectToEdgesList(graph) {
 	var edgesList = [];
@@ -18,13 +19,15 @@ function convertObjectToEdgesList(graph) {
 	return edgesList;
 }
 
-function printDistanceArray(distance) {
-  for (var i = 0; i < distance.length; i++) {
-    console.log("distance[" + i + "] = " + distance[i]);
-  }
+// function printDistanceArray(distance) {
+//   for (var i = 0; i < distance.length; i++) {
+//     console.log("distance[" + i + "] = " + distance[i]);
+//   }
+// }
+function printDistanceArray2D(distance) {
+	for (var i = 0; i < distance.length; i++) {
+		console.log(i, ": ", distance[i]);
+	}
 }
 
-// console.log(convertObjectToEdgesList(graph1));
-// console.log(convertObjectToEdgesList(graph2));
-
-export { convertObjectToEdgesList ,printDistanceArray};
+export { convertObjectToEdgesList ,printDistanceArray, printDistanceArray2D};
