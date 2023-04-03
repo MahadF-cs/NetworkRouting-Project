@@ -1,19 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-
-interface Node {
-  x: number;
-  y: number;
-  radius: number;
-  color: string;
-  number: number;
-}
-
-interface Edge {
-  start: Node;
-  end: Node;
-  weight: number;
-  color: string;
-}
+import { Graph, Node, Edge } from "../types/types.js";
+import { djikstraAlgorithm } from "../algorithms/djikstra.js";
+import Select from "react-select";
 
 interface CanvasProps {
   width: number;
@@ -21,7 +9,7 @@ interface CanvasProps {
 }
 
 const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
-  const [nodes, setnodes] = useState<Node[]>([]);
+  const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
@@ -33,8 +21,8 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
   const [updateWeights, setUpdateWeights] = useState<boolean>(false);
   const [djikstra, setDjikstra] = useState<boolean>(false);
   const [bellmanFord, setBellmanFord] = useState<boolean>(false);
-  const [startNode, setStartNode] = useState<number>();
-  const [endNode, setEndNode] = useState<number>();
+  const [startNode, setStartNode] = useState<Number>();
+  const [endNode, setEndNode] = useState<Number>();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -109,14 +97,15 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     // if add node button is clicked add a node
     if (addNode) {
       // update nodes list with mouseclick coordinates
-      setnodes([
+      setNodes([
         ...nodes,
         {
           x: event.nativeEvent.offsetX,
           y: event.nativeEvent.offsetY,
           radius: 20,
           color: "#98c1d9",
-          number: nodes.length - 1,
+          number: nodes.length,
+          distance: Infinity,
         },
       ]);
     }
@@ -179,7 +168,13 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     }
   };
 
-  console.log({ Nodes: nodes, Edges: edges });
+  // create a new graph with the nodes and edges
+  const stateGraph: Graph = {
+    nodes: nodes,
+    edges: edges,
+  };
+
+  // console.log(djikstraAlgorithm(stateGraph, nodes[0], nodes[nodes.length - 1]));
 
   return (
     <div className="flex flex-col">
@@ -190,7 +185,7 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
             setClear(true);
             setAddNode(false);
             setAddEdge(false);
-            setnodes([]);
+            setNodes([]);
             setEdges([]);
             setSelectedEdge(null);
             setSelectedNode(null);
@@ -238,17 +233,42 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
         >
           {updateWeights ? "Stop" : "Update Weights"}
         </button>
-      </div>
-
-      <canvas
-        ref={canvasRef}
-        onClick={handleCanvasClick}
-        width={width}
-        height={height}
-        style={{ border: "1px solid #ccc", display: "block", margin: "auto" }}
-      />
-
-      <div className="grid grid-cols-2 gap-7 m-10">
+        <Select
+          options={nodes.map((node) => ({
+            value: node.number,
+            label: node.number,
+            node: node,
+          }))}
+          // change style color of options to black instead of white
+          styles={{
+            option: (provided, state) => ({
+              ...provided,
+              color: "black",
+            }),
+          }}
+          placeholder="Start Node"
+          onChange={(e) => {
+            setStartNode(e?.value);
+          }}
+        />
+        <Select
+          options={nodes.map((node) => ({
+            value: node.number,
+            label: node.number,
+            node: node,
+          }))}
+          // change style color of options to black instead of white
+          styles={{
+            option: (provided, state) => ({
+              ...provided,
+              color: "black",
+            }),
+          }}
+          placeholder="End Node"
+          onChange={(e) => {
+            setEndNode(e?.value);
+          }}
+        />
         <button
           className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
           onClick={() => {
@@ -271,34 +291,15 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
         >
           Bell-man Ford Path
         </button>
-
-        {/* dropdown menu thaat has all the nodes */}
-        <select
-          className="bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-          onChange={(e) => {
-            setStartNode(parseInt(e.target.value));
-          }}
-          defaultValue={-1}
-          // show "START NODE" on the dropdown menu
-        >
-          <option value={-1}>Not Selected</option>
-          {nodes.map((node) => (
-            <option value={node.number}>{node.number}</option>
-          ))}
-        </select>
-        <select
-          className="bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-          onChange={(e) => {
-            setEndNode(parseInt(e.target.value));
-          }}
-          defaultValue={-1}
-        >
-          <option value={-1}>Not Selected</option>
-          {nodes.map((node) => (
-            <option value={node.number}>{node.number}</option>
-          ))}
-        </select>
       </div>
+
+      <canvas
+        ref={canvasRef}
+        onClick={handleCanvasClick}
+        width={width}
+        height={height}
+        style={{ border: "1px solid #ccc", display: "block", margin: "auto" }}
+      />
     </div>
   );
 };
