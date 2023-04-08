@@ -174,19 +174,16 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     edges: edges,
   };
 
-  console.log(djikstraAlgorithm(stateGraph, nodes[0], nodes[nodes.length - 1]));
+  // console.log(djikstraAlgorithm(stateGraph, nodes[0], nodes[nodes.length - 1]));
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-col">
       <div className="flex flex-col m-10">
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mb-4"
-          onClick={() => {
-            setClear(true);
+        <div>
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-10 rounded mx-5"
+            onClick={() => {
+              setClear(true);
               setAddNode(false);
               setAddEdge(false);
               setNodes([]);
@@ -196,117 +193,52 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
               setUpdateWeights(false);
               setDjikstra(false);
               setBellmanFord(false);
-          }}
-        >
-          Clear
-        </button>
-  
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4"
-          onClick={() => {
-            setAddNode((prevState) => !prevState);
-              setAddEdge(false);
-              setUpdateWeights(false);
-              setDjikstra(false);
-              setBellmanFord(false);
-          }}
-        >
-          {addNode ? "Stop" : "Add Node"}
-        </button>
-  
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4"
-          onClick={() => {
-            setAddEdge((prevState) => !prevState);
-              setAddNode(false);
-              setUpdateWeights(false);
-              setDjikstra(false);
-              setBellmanFord(false);
-          }}
-        >
-          {addEdge ? "Stop" : "Add Edge"}
-        </button>
-  
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4"
-          onClick={() => {
-            setUpdateWeights((prevState) => !prevState);
-              setAddNode(false);
-              setAddEdge(false);
-              setDjikstra(false);
-              setBellmanFord(false);
-          }}
-        >
-          {updateWeights ? "Stop" : "Update Weights"}
-        </button>
-  
-        <button
-          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded mb-4"
-          onClick={() => {
-              setDjikstra(true);
-              setBellmanFord(false);
-              setAddNode(false);
-              setAddEdge(false);
-          }}
-        >
-          Djikstra Path
-        </button>
-  
-        <button
-          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded mb-4"
-          onClick={() => {
-              setBellmanFord(true);
-              setDjikstra(false);
-              setAddNode(false);
-              setAddEdge(false);
-          }}
-        >
-          Bell-man Ford Path
-        </button>
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-4"
-          onClick={() => {
+            }}
+          >
+            Clear
+          </button>
 
-            {/* add function to calculate shortest path here */}
-          }}
-        >
-          Calculate Shortest Path!
-        </button>
-  
-        {/* dropdown menu that has all the nodes */}
-        <select
-          className="bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-4"
-          onChange={(e) => {
-            setStartNode(parseInt(e.target.value));
-          }}
-          defaultValue={-1}
-          // show "START NODE" on the dropdown menu
-        >
-          <option value={-1}>Select Start Node</option>
-          {nodes.map((node) => (
-            <option key={node.number} value={node.number}>
-              {node.number}
-            </option>
-          ))}
-        </select>
-        <select
-          className="bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mb-4"
-          onChange={(e) => {
-            setEndNode(parseInt(e.target.value));
-          }}
-          defaultValue={-1}
-        >
-          <option value={-1}>Select End Node</option>
-          {nodes.map((node) => (
-            <option key={node.number} value={node.number}>
-              {node.number}
-            </option>
-          ))}
-        </select>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-10 rounded mx-5 "
+            onClick={() => {
+              setAddNode((prevState) => !prevState);
+              setAddEdge(false);
+              setUpdateWeights(false);
+              setDjikstra(false);
+              setBellmanFord(false);
+            }}
+          >
+            {addNode ? "Stop" : "Add Node"}
+          </button>
+
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-10 rounded mx-5 "
+            onClick={() => {
+              setAddEdge((prevState) => !prevState);
+              setAddNode(false);
+              setUpdateWeights(false);
+              setDjikstra(false);
+              setBellmanFord(false);
+            }}
+          >
+            {addEdge ? "Stop" : "Add Edge"}
+          </button>
+
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-10 rounded mx-5 "
+            onClick={() => {
+              setUpdateWeights((prevState) => !prevState);
+              setAddNode(false);
+              setAddEdge(false);
+              setDjikstra(false);
+              setBellmanFord(false);
+            }}
+          >
+            {updateWeights ? "Stop" : "Update Weights"}
+          </button>
+        </div>
       </div>
       <div className="flex flex-col justify-center items-center">
-        
-  
         <canvas
           ref={canvasRef}
           onClick={handleCanvasClick}
@@ -315,30 +247,106 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
           style={{ border: "1px solid #ccc", display: "block", margin: "auto" }}
         />
         <br></br>
-        <table>
-  <thead>
-    <tr>
-      <th>Node</th>
-      {nodes.map((node) => (
-        <th key={node.number}>{node.number}</th>
-      ))}
-    </tr>
-  </thead>
-  <tbody>
-    {nodes.map((sourceNode) => (
-      <tr key={sourceNode.number}>
-        <td>{sourceNode.number}</td>
-        {nodes.map((destNode) => (
-          <td key={destNode.number}></td>
-        ))}
-      </tr>
-    ))}
-  </tbody>
-</table>
+        {/* <table>
+          <thead>
+            <tr>
+              <th>Node</th>
+              {nodes.map((node) => (
+                <th key={node.number}>{node.number}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {nodes.map((sourceNode) => (
+              <tr key={sourceNode.number}>
+                <td>{sourceNode.number}</td>
+                {nodes.map((destNode) => (
+                  <td key={destNode.number}></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table> */}
+      </div>
+      <div>
+        <div className="flex flex-row justify-center">
+          {/* dropdown menu that has all the nodes */}
+          <Select
+            className="w-1/3 m-5"
+            options={nodes.map((node) => ({
+              value: node.number,
+              label: node.number,
+              node: node,
+            }))}
+            // change style color of options to black instead of white
+            styles={{
+              option: (provided, state) => ({
+                ...provided,
+                color: "black",
+              }),
+            }}
+            placeholder="Start Node"
+            onChange={(e) => {
+              setStartNode(e?.value);
+            }}
+          />
+
+          <Select
+            className="w-1/3 m-5"
+            options={nodes.map((node) => ({
+              value: node.number,
+              label: node.number,
+              node: node,
+            }))}
+            // change style color of options to black instead of white
+            styles={{
+              option: (provided, state) => ({
+                ...provided,
+                color: "black",
+              }),
+            }}
+            placeholder="End Node"
+            onChange={(e) => {
+              setEndNode(e?.value);
+            }}
+          />
+        </div>
+        <button
+          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-10 rounded mx-5 "
+          onClick={() => {
+            setDjikstra(true);
+            setBellmanFord(false);
+            setAddNode(false);
+            setAddEdge(false);
+          }}
+        >
+          Djikstra Path
+        </button>
+
+        <button
+          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-10 rounded mx-5 "
+          onClick={() => {
+            setBellmanFord(true);
+            setDjikstra(false);
+            setAddNode(false);
+            setAddEdge(false);
+          }}
+        >
+          Bell-man Ford Path
+        </button>
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-10 rounded mx-5 my-7"
+          onClick={() => {
+            {
+              /* add function to calculate shortest path here */
+            }
+          }}
+        >
+          Calculate Shortest Path!
+        </button>
       </div>
     </div>
   );
 };
 
 export default Canvas;
-
