@@ -71,3 +71,55 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #333;
+  font-family: Arial, sans-serif;
+  table-layout: fixed;
+}
+
+th, td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  text-align: right;
+}
+
+th {
+  background-color: #7a4fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+tbody tr:nth-of-type(odd) {
+  background-color: #f5ebff;
+}
+
+tbody tr:nth-of-type(even) {
+  background-color: #e5f5ff;
+}
+
+tbody tr:hover {
+  background-color: #ffcece;
+}
+
+td:first-child {
+  font-weight: bold;
+  color: #d33aff;
+}
+
+td:nth-child(2) {
+  color: #4c77ff;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  text-shadow: 1px 1px 1px #ccc;
+  color: #8a2be2;
+}
