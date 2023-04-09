@@ -1,7 +1,7 @@
 // import the function
+// import { func } from "prop-types";
 import {
 	convertObjectToEdgesList,
-	printDistanceArray,
 	printDistanceArray2D
 } from "./bellmanFord_Helper.js";
 // import example graph 1 json as a variable
@@ -14,9 +14,11 @@ import graph3 from "./sampleGraph3.json" assert { type: "json" };
 import graph4 from "./sampleGraph4.json" assert { type: "json" };
 // import example graph 5 json as a variable
 import graph5 from "./sampleGraph5.json" assert { type: "json" };
+// import example graph 6 json as a variable
+import graph6 from "./sampleGraph6.json" assert { type: "json" };
 
 // funcition to implement Bellman-Ford algorithm
-function BellmanFord(graph, source_node_number) {
+function BellmanFord(graph, source_node_number, end_node_number) {
 	const num_vertices = graph.num_vertices;
 	const num_edges = graph.num_edges;
 
@@ -48,44 +50,47 @@ function BellmanFord(graph, source_node_number) {
 		distance[end][start] = graph.edges[i].weight;
 	}
 
+
 	printDistanceArray2D(distance);
 
-	function updateDistances(){
-
-		//   clone the distance array so it doesn't continually update
-		var newDistance = distance.map(function (arr) {
-			return arr.slice();
-		});
-
-		for (var row = 0; row < distance.length; row++) {
-			for (var col = 0; col < distance.length; col++) {
-				// row/col has a path to n to tell neighbors about
-				if (distance[row][col] != 0 && distance[row][col] != Infinity) {
-					// loop neighbors
-					for (var i = 0; i < distance.length; i++) {
-						// neighbor has path to row/col
-						if (distance[i][row] != 0 && distance[i][row] != Infinity) {
-							// update neighbor if its path to n is bigger than row/col path to n + row/col's path to neighbor 
-							if (distance[i][col] > distance[row][col] + distance[i][row]) {
-								newDistance[i][col] = distance[row][col] + distance[i][row];
-								// Can add visualisation step here
-							}
-						}
-					}
-				}
-			}
-		}
-		return newDistance;
-	}
-	// another visualisation step can be added here for update neighbor steps
-	distance = updateDistances();
+	distance = updateDistances(distance);
 	console.log("--------------------------------");
 	printDistanceArray2D(distance);
-
-	distance = updateDistances();
+	// another visualisation step can be added here for update neighbor steps
+	distance = updateDistances(distance);
 	console.log("--------------------------------");
 	printDistanceArray2D(distance);
 
 }
 
-BellmanFord(graph5, 0);
+function updateDistances(distance){
+
+	//   clone the distance array so it doesn't continually update
+	var newDistance = distance.map(function (arr) {
+		return arr.slice();
+	});
+
+	for (var row = 0; row < distance.length; row++) {
+		for (var col = 0; col < distance.length; col++) {
+			// row/col has a path to n to tell neighbors about
+			if (distance[row][col] != 0 && distance[row][col] != Infinity) {
+				// loop neighbors
+				for (var i = 0; i < distance.length; i++) {
+					// neighbor has path to row/col
+					if (distance[i][row] != 0 && distance[i][row] != Infinity) {
+						// update neighbor if its path to n is bigger than row/col path to n + row/col's path to neighbor 
+						if (distance[i][col] > distance[row][col] + distance[i][row]) {
+							newDistance[i][col] = distance[row][col] + distance[i][row];
+							// Can add visualisation step here
+						}
+					}
+				}
+			}
+		}
+	}
+	return newDistance;
+}
+
+
+BellmanFord(graph6, 0);
+

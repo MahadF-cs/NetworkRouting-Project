@@ -19,15 +19,10 @@ function convertObjectToEdgesList(graph) {
 	return edgesList;
 }
 
-// function printDistanceArray(distance) {
-//   for (var i = 0; i < distance.length; i++) {
-//     console.log("distance[" + i + "] = " + distance[i]);
-//   }
-// }
 function printDistanceArray2D(distance) {
 	for (var i = 0; i < distance.length; i++) {
 		console.log(i, ": ", distance[i]);
 	}
 }
 
-export { convertObjectToEdgesList ,printDistanceArray, printDistanceArray2D};
+export { convertObjectToEdgesList , printDistanceArray2D};
