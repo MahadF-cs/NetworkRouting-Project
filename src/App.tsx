@@ -1,15 +1,19 @@
 import { useState } from "react";
-import Canvas from "./components/Canvas";
+import UserInput from "./components/UserInput";
+import { Graph, Node, Edge } from "./types/types.js";
 import "./App.css";
 
+
 function App() {
-  const [count, setCount] = useState(0);
+
+  const WIDTH = 600;
+  const HEIGHT = 400;
 
   return (
     <div className="App">
-      <div className="flex flex-col items-center justify-center">
-        <Canvas width={900} height={600} />
-      </div>
+
+        <UserInput width={WIDTH} height={HEIGHT} />
+
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { Graph, Node, Edge } from "../types/types.js";
 import PriorityQueue from "priorityqueue";
 
-function djikstraAlgorithm(currGraph: Graph, start: Node, end: Node) {
+function djikstraAlgorithm(currGraph: Graph, start: Node, end?: Node) {
   // set distances to a empty object that has the key as the node number and the value as the distance
   // {Nodes: nodes, Edges: edges}
   let distances: { [key: number]: number } = {};
@@ -48,26 +48,19 @@ function djikstraAlgorithm(currGraph: Graph, start: Node, end: Node) {
     }
   }
 
-  // let path: Node[] = [];
-  // let curr: Node = end;
-  // while (curr !== null) {
-  //   path.push(curr);
-  //   curr = previous[curr.number];
-  // }
+  // return the {distances, path } where path is the shortest path between the start and end node in the form of an array of numbers
+  if (end) {
+    let path = [];
+    let currNode = end;
 
-  // let shortestPath = "";
-  // for (let i = path.length - 1; i >= 0; i--) {
-  //   shortestPath += path[i].number;
-  //   if (i !== 0) {
-  //     shortestPath += "->";
-  //   }
-  // }
-
-  // console.log("shortest path", shortestPath);
-
-  return distances;
-
-  // [[0,1,2,3], [1,3,4,6], [2,4,5,7], [3,6,7,8]]
+    while (currNode.number !== start.number) {
+      path.push(currNode.number);
+      currNode = previous[currNode.number];
+    }
+    path.push(start.number);
+    return { distances, path: path.reverse() }
+  }
+  return { distances, path: null};
 }
 
 export { djikstraAlgorithm };

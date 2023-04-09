@@ -3,12 +3,12 @@ import { Graph, Node, Edge } from "../types/types.js";
 import { djikstraAlgorithm } from "../algorithms/djikstra.js";
 import Select from "react-select";
 
-interface CanvasProps {
+interface UserInputProps {
   width: number;
   height: number;
 }
 
-const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
+const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -23,15 +23,93 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
   const [bellmanFord, setBellmanFord] = useState<boolean>(false);
   const [startNode, setStartNode] = useState<Number>();
   const [endNode, setEndNode] = useState<Number>();
+  const [routingTable, setRoutingTable] = useState<any[]>([]);
+  const [shortestPath, setShortestPath] = useState<Number[] | null>([]);
+  const [outputGraph, setOutputGraph] = useState<Graph | null>(null);
 
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRefUser = useRef<HTMLCanvasElement | null>(null);
+  const canvasRefOutput = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    updateCanvas();
-  }, [nodes, edges]);
+    if (djikstra || bellmanFord) {
+      const stateGraph: Graph = {
+        nodes: nodes,
+        edges: edges,
+      };
+      if (djikstra) {
+        const start = findNodefromNumber(startNode as number);
+        const end = findNodefromNumber(endNode as number);
+        if (start && end) {
+          nodes.forEach((node) => {
+            const result = djikstraAlgorithm(stateGraph, node);
+            setRoutingTable((prev) => {
+              return [...prev, result.distances];
+            });
+          });
+          setShortestPath(djikstraAlgorithm(stateGraph, start, end).path);
+          outLineShortestPath(start, end);
+          updateOutputCanvas();
+        }
+      }
+    } else {
+      updateOutputCanvas();
+      updateUserCanvas();
+    }
+  }, [nodes, edges, djikstra, bellmanFord, outputGraph]);
 
-  const updateCanvas = () => {
-    const canvas = canvasRef.current;
+  const findNodefromNumber = (number: number) => {
+    return nodes.find((node) => node.number === number);
+  };
+
+  const updateOutputCanvas = () => {
+    const canvasUser = canvasRefUser.current;
+    const canvasOutput = canvasRefOutput.current;
+
+    if (!canvasUser || !canvasOutput) return;
+
+    const ctxUser = canvasUser.getContext("2d");
+    const ctxOutput = canvasOutput.getContext("2d");
+
+    if (!ctxUser || !ctxOutput) return;
+
+    ctxOutput.clearRect(0, 0, width, height);
+    ctxOutput.fillStyle = "white";
+    ctxOutput.fillRect(0, 0, width, height);
+
+    drawEdges(ctxOutput);
+    drawNodes(ctxOutput);
+
+  };
+
+  const outLineShortestPath = (start: Node, end: Node) => {
+    setOutputGraph({
+      nodes: nodes,
+      edges: edges,
+    });
+    // iterate all the nodes and if they are in the shortest path turn them red
+    outputGraph?.nodes.forEach((node) => {
+      if (shortestPath?.includes(node.number)) {
+        node.color = "red";
+      }
+    });
+
+    // iterate all the edges and if there exists an edge between two nodes in the shortest path turn it red
+    outputGraph?.edges.forEach((edge) => {
+      if (
+        shortestPath?.includes(edge.start.number) &&
+        shortestPath?.includes(edge.end.number)
+      ) {
+        edge.color = "red";
+      }
+    });
+  }
+
+  console.log({ outputGraph: outputGraph })
+  console.log({ Nodes: nodes, Edges: edges})
+
+
+  const updateUserCanvas = () => {
+    const canvas = canvasRefUser.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
@@ -168,14 +246,6 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     }
   };
 
-  // create a new graph with the nodes and edges
-  const stateGraph: Graph = {
-    nodes: nodes,
-    edges: edges,
-  };
-
-  // console.log(djikstraAlgorithm(stateGraph, nodes[0], nodes[nodes.length - 1]));
-
   return (
     <div className="flex flex-col">
       <div className="flex flex-col m-10">
@@ -193,6 +263,8 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
               setUpdateWeights(false);
               setDjikstra(false);
               setBellmanFord(false);
+              setRoutingTable([]);
+              setOutputGraph(null);
             }}
           >
             Clear
@@ -240,33 +312,12 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
       </div>
       <div className="flex flex-col justify-center items-center">
         <canvas
-          ref={canvasRef}
+          ref={canvasRefUser}
           onClick={handleCanvasClick}
           width={width}
           height={height}
           style={{ border: "1px solid #ccc", display: "block", margin: "auto" }}
         />
-        <br></br>
-        {/* <table>
-          <thead>
-            <tr>
-              <th>Node</th>
-              {nodes.map((node) => (
-                <th key={node.number}>{node.number}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {nodes.map((sourceNode) => (
-              <tr key={sourceNode.number}>
-                <td>{sourceNode.number}</td>
-                {nodes.map((destNode) => (
-                  <td key={destNode.number}></td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table> */}
       </div>
       <div>
         <div className="flex flex-row justify-center">
@@ -320,11 +371,11 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
             setAddEdge(false);
           }}
         >
-          Djikstra Path
+          Djikstra Alogrithm
         </button>
 
         <button
-          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-10 rounded mx-5 "
+          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-10 rounded mx-5 my-7"
           onClick={() => {
             setBellmanFord(true);
             setDjikstra(false);
@@ -332,21 +383,52 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
             setAddEdge(false);
           }}
         >
-          Bell-man Ford Path
+          Bell-man Ford Alogrithm
         </button>
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-10 rounded mx-5 my-7"
-          onClick={() => {
-            {
-              /* add function to calculate shortest path here */
-            }
-          }}
-        >
-          Calculate Shortest Path!
-        </button>
+      </div>
+
+      <div className="grid grid-cols-2">
+        <div>
+          <canvas
+            ref={canvasRefOutput}
+            width={width}
+            height={height}
+            style={{
+              border: "1px solid #ccc",
+              display: "block",
+              margin: "auto",
+            }}
+          />
+        </div>
+        <div className="flex flex-row justify-center items-center ml-5">
+          <div className="flex flex-col justify-center items-center">
+            <table className="table-auto">
+              <thead>
+                <tr>
+                  <th>Node</th>
+                  {nodes.map((node) => (
+                    <th key={node.number}>{node.number}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {nodes.map((sourceNode) => (
+                  <tr key={sourceNode.number}>
+                    <td>{sourceNode.number}</td>
+                    {nodes.map((destNode) => (
+                      <td key={destNode.number}>
+                        {routingTable[sourceNode.number]?.[destNode.number]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Canvas;
+export default UserInput;
