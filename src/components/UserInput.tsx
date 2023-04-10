@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Graph, Node, Edge } from "../types/types.js";
-import { djikstraAlgorithm } from "../algorithms/djikstra.js";
+import { BellmanFordAlgorithm } from "../algorithms/bellmanford.js";
+import { djikstraAlgorithm } from "../algorithms/djikstra";
+
 import Select from "react-select";
 
 interface UserInputProps {
@@ -32,6 +34,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
 
   useEffect(() => {
     if (djikstra || bellmanFord) {
+      updateOutputCanvas();
       const stateGraph: Graph = {
         nodes: nodes,
         edges: edges,
@@ -51,6 +54,21 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
           updateOutputCanvas();
         }
       }
+      if (bellmanFord) {
+        const start = findNodefromNumber(startNode as number);
+        const end = findNodefromNumber(endNode as number);
+
+        if (start && end) {
+          // the output for the bellmanman ford algorithm is an 2 d array
+
+          const result = BellmanFordAlgorithm(stateGraph, start.number, end.number);
+          console.log(result)
+          // setRoutingTable(result.distance);
+          // setShortestPath(result.path);
+          // outLineShortestPath(start, end);
+          // updateOutputCanvas();
+        }
+      }
     } else {
       updateOutputCanvas();
       updateUserCanvas();
@@ -61,6 +79,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
     return nodes.find((node) => node.number === number);
   };
 
+  console.log({ nodes: nodes, edges: edges });
   const updateOutputCanvas = () => {
     const canvasUser = canvasRefUser.current;
     const canvasOutput = canvasRefOutput.current;
@@ -78,7 +97,6 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
 
     drawEdges(ctxOutput);
     drawNodes(ctxOutput);
-
   };
 
   const outLineShortestPath = (start: Node, end: Node) => {
@@ -102,11 +120,10 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         edge.color = "red";
       }
     });
-  }
+  };
 
-  console.log({ outputGraph: outputGraph })
-  console.log({ Nodes: nodes, Edges: edges})
-
+  // console.log({ outputGraph: outputGraph })
+  // console.log({ Nodes: nodes, Edges: edges })
 
   const updateUserCanvas = () => {
     const canvas = canvasRefUser.current;
@@ -387,46 +404,50 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         </button>
       </div>
 
-      <div className="grid grid-cols-2">
-        <div>
-          <canvas
-            ref={canvasRefOutput}
-            width={width}
-            height={height}
-            style={{
-              border: "1px solid #ccc",
-              display: "block",
-              margin: "auto",
-            }}
-          />
-        </div>
-        <div className="flex flex-row justify-center items-center ml-5">
-          <div className="flex flex-col justify-center items-center">
-            <table className="table-auto">
-              <thead>
-                <tr>
-                  <th>Node</th>
-                  {nodes.map((node) => (
-                    <th key={node.number}>{node.number}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {nodes.map((sourceNode) => (
-                  <tr key={sourceNode.number}>
-                    <td>{sourceNode.number}</td>
-                    {nodes.map((destNode) => (
-                      <td key={destNode.number}>
-                        {routingTable[sourceNode.number]?.[destNode.number]}
-                      </td>
+      {djikstra || bellmanFord ? (
+        <div className="grid grid-cols-2">
+          <div>
+            <canvas
+              ref={canvasRefOutput}
+              width={width}
+              height={height}
+              style={{
+                border: "1px solid #ccc",
+                display: "block",
+                margin: "auto",
+              }}
+            />
+          </div>
+          <div className="flex flex-row justify-center items-center ml-5">
+            <div className="flex flex-col justify-center items-center">
+              <table className="table-auto">
+                <thead>
+                  <tr>
+                    <th>Node</th>
+                    {nodes.map((node) => (
+                      <th key={node.number}>{node.number}</th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {nodes.map((sourceNode) => (
+                    <tr key={sourceNode.number}>
+                      <td>{sourceNode.number}</td>
+                      {nodes.map((destNode) => (
+                        <td key={destNode.number}>
+                          {routingTable[sourceNode.number]?.[destNode.number]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 };
