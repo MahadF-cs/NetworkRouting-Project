@@ -64,8 +64,6 @@ function BellmanFord(graph, source_node_number, end_node_number) {
 	console.log("--------------------------------");
 	printDistanceArray2D(distance);
 	console.log("--------------------------------");
-
-	console.log("yep", source_node_number, end_node_number);
 	
 	console.log(shortestPath(graph, distance, source_node_number, end_node_number))
 }
