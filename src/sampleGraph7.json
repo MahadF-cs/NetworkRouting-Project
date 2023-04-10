@@ -1,0 +1,118 @@
+{
+  "nodes": [
+    {
+      "x": 158,
+      "y": 215,
+      "radius": 20,
+      "color": "red",
+      "number": 0,
+      "distance": 0
+    },
+    {
+      "x": 263,
+      "y": 109,
+      "radius": 20,
+      "color": "#98c1d9",
+      "number": 1,
+      "distance": 1
+    },
+    {
+      "x": 252,
+      "y": 314,
+      "radius": 20,
+      "color": "red",
+      "number": 2,
+      "distance": 1
+    },
+    {
+      "x": 406,
+      "y": 195,
+      "radius": 20,
+      "color": "red",
+      "number": 3,
+      "distance": 2
+    }
+  ],
+  "edges": [
+    {
+      "start": {
+        "x": 158,
+        "y": 215,
+        "radius": 20,
+        "color": "red",
+        "number": 0,
+        "distance": 0
+      },
+      "end": {
+        "x": 263,
+        "y": 109,
+        "radius": 20,
+        "color": "#98c1d9",
+        "number": 1,
+        "distance": 1
+      },
+      "weight": 1,
+      "color": "black"
+    },
+    {
+      "start": {
+        "x": 263,
+        "y": 109,
+        "radius": 20,
+        "color": "#98c1d9",
+        "number": 1,
+        "distance": 1
+      },
+      "end": {
+        "x": 406,
+        "y": 195,
+        "radius": 20,
+        "color": "red",
+        "number": 3,
+        "distance": 2
+      },
+      "weight": 50,
+      "color": "black"
+    },
+    {
+      "start": {
+        "x": 406,
+        "y": 195,
+        "radius": 20,
+        "color": "red",
+        "number": 3,
+        "distance": 2
+      },
+      "end": {
+        "x": 252,
+        "y": 314,
+        "radius": 20,
+        "color": "red",
+        "number": 2,
+        "distance": 1
+      },
+      "weight": 1,
+      "color": "red"
+    },
+    {
+      "start": {
+        "x": 252,
+        "y": 314,
+        "radius": 20,
+        "color": "red",
+        "number": 2,
+        "distance": 1
+      },
+      "end": {
+        "x": 158,
+        "y": 215,
+        "radius": 20,
+        "color": "red",
+        "number": 0,
+        "distance": 0
+      },
+      "weight": 1,
+      "color": "red"
+    }
+  ]
+}
