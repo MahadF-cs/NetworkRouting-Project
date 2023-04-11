@@ -16,6 +16,8 @@ import graph4 from "./sampleGraph4.json" assert { type: "json" };
 import graph5 from "./sampleGraph5.json" assert { type: "json" };
 // import example graph 6 json as a variable
 import graph6 from "./sampleGraph6.json" assert { type: "json" };
+// import example graph 7 json as a variable
+import graph7 from "./sampleGraph7.json" assert { type: "json" };
 
 // funcition to implement Bellman-Ford algorithm
 function BellmanFord(graph, source_node_number, end_node_number) {
@@ -97,35 +99,28 @@ function updateDistances(distance){
 function shortestPath(graph, distance, source, end){
 	var currentNode = source;
 	var traversedNodes = [source];
-	var edgeExists = false;
 	var smallest = distance[source][end];
 	var smallestNode = -1;
 	while (currentNode != end){
 		for (var col = 0; col < distance.length; col++) {
 			for(var i = 0; i < graph.num_edges; i++){
-				if(graph.edges[i].start.number == currentNode && graph.edges[i].end.number == col){
-					edgeExists = true;
-					// console.log(graph.edges[i].start.number, graph.edges[i].end.number);
-					break;
-				}else{
-					edgeExists = false;
+				if(graph.edges[i].start.number == currentNode && graph.edges[i].end.number == col || 
+                    graph.edges[i].start.number == col && graph.edges[i].end.number == currentNode){
+					if(distance[col][end] <= smallest 
+                        && !traversedNodes.includes(col)){
+                        smallest = distance[col][end];
+                        smallestNode = col;
+                    }
 				}
-			}
-			if(distance[col][end] <= smallest 
-			&& edgeExists == true
-			&& !traversedNodes.includes(col)){
-				smallest = distance[col][end];
-				smallestNode = col;
 			}
 		}
 		currentNode = smallestNode;
 		traversedNodes.push(smallestNode);
-		edgeExists = false;
 	}
 	return traversedNodes;
 }
 
-BellmanFord(graph4, 0, 8);
+BellmanFord(graph4, 0, 2);
 
 //doesn't work if nodes don't start at 0,
 //need  to output the shortest path

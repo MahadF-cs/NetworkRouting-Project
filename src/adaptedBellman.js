@@ -100,7 +100,6 @@ function updateDistances(distance){
 function shortestPath(graph, distance, source, end){
 	var currentNode = source;
 	var traversedNodes = [source];
-	var edgeExists = false;
 	var smallest = distance[source][end];
 	var smallestNode = -1;
 	while (currentNode != end){
@@ -118,7 +117,6 @@ function shortestPath(graph, distance, source, end){
 		}
 		currentNode = smallestNode;
 		traversedNodes.push(smallestNode);
-		edgeExists = false;
 	}
 	return traversedNodes;
 }
