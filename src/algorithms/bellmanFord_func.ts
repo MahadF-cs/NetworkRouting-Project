@@ -39,20 +39,15 @@ function shortestPath(graph, distance, source, end){
     var smallestNode = -1;
     while (currentNode != end){
         for (var col = 0; col < distance.length; col++) {
-            for(var i = 0; i < graph.num_edges; i++){
-                if(graph.edges[i].start.number == currentNode && graph.edges[i].end.number == col){
-                    edgeExists = true;
-                    // console.log(graph.edges[i].start.number, graph.edges[i].end.number);
-                    break;
-                }else{
-                    edgeExists = false;
+            for(var i = 0; i < graph.edges.length; i++){
+                if(graph.edges[i].start.number == currentNode && graph.edges[i].end.number == col || 
+                    graph.edges[i].start.number == col && graph.edges[i].end.number == currentNode){
+                    if(distance[col][end] <= smallest 
+                        && !traversedNodes.includes(col)){
+                        smallest = distance[col][end];
+                        smallestNode = col;
+                    }
                 }
-            }
-            if(distance[col][end] <= smallest 
-            && edgeExists == true
-            && !traversedNodes.includes(col)){
-                smallest = distance[col][end];
-                smallestNode = col;
             }
         }
         currentNode = smallestNode;

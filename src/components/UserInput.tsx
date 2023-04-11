@@ -59,14 +59,11 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         const end = findNodefromNumber(endNode as number);
 
         if (start && end) {
-          // the output for the bellmanman ford algorithm is an 2 d array
-
-          const result = BellmanFordAlgorithm(stateGraph, start.number, end.number);
-          console.log(result)
-          // setRoutingTable(result.distance);
-          // setShortestPath(result.path);
-          // outLineShortestPath(start, end);
-          // updateOutputCanvas();
+          // the bellan ford algorithm returns the 2d array of distances
+          setRoutingTable(BellmanFordAlgorithm(stateGraph, start.number, end.number).distance);
+          setShortestPath(BellmanFordAlgorithm(stateGraph, start.number, end.number).path);
+          outLineShortestPath(start, end);
+          updateOutputCanvas();
         }
       }
     } else {
@@ -79,7 +76,6 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
     return nodes.find((node) => node.number === number);
   };
 
-  console.log({ nodes: nodes, edges: edges });
   const updateOutputCanvas = () => {
     const canvasUser = canvasRefUser.current;
     const canvasOutput = canvasRefOutput.current;
