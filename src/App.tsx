@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div className="App">
-
+      <h1>Dijkstra vs Bellman Ford</h1>
         <UserInput width={WIDTH} height={HEIGHT} />
 
     </div>
