@@ -43,12 +43,12 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         const start = findNodefromNumber(startNode as number);
         const end = findNodefromNumber(endNode as number);
         if (start && end) {
+          let routing2darray: any[] = [];
           nodes.forEach((node) => {
             const result = djikstraAlgorithm(stateGraph, node);
-            setRoutingTable((prev) => {
-              return [...prev, result.distances];
-            });
+            routing2darray.push(result.distances);
           });
+          setRoutingTable(routing2darray);
           setShortestPath(djikstraAlgorithm(stateGraph, start, end).path);
           outLineShortestPath(start, end);
           updateOutputCanvas();
@@ -60,8 +60,12 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
 
         if (start && end) {
           // the bellan ford algorithm returns the 2d array of distances
-          setRoutingTable(BellmanFordAlgorithm(stateGraph, start.number, end.number).distance);
-          setShortestPath(BellmanFordAlgorithm(stateGraph, start.number, end.number).path);
+          setRoutingTable(
+            BellmanFordAlgorithm(stateGraph, start.number, end.number).distance
+          );
+          setShortestPath(
+            BellmanFordAlgorithm(stateGraph, start.number, end.number).path
+          );
           outLineShortestPath(start, end);
           updateOutputCanvas();
         }
@@ -70,7 +74,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
       updateOutputCanvas();
       updateUserCanvas();
     }
-  }, [nodes, edges, djikstra, bellmanFord, outputGraph]);
+  }, [nodes, edges, djikstra, bellmanFord]);
 
   const findNodefromNumber = (number: number) => {
     return nodes.find((node) => node.number === number);
@@ -94,27 +98,30 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
     drawEdges(ctxOutput);
     drawNodes(ctxOutput);
   };
-  
+
   const outLineShortestPath = (start: Node, end: Node) => {
     setOutputGraph({
       nodes: nodes,
       edges: edges,
     });
-  
+
     // Get the shortest path and its length
     const path = shortestPath ?? [];
     const pathLength = path.length;
-  
+
     // Initialize the delay time to 800ms
     let delay = 800;
-  
+
     // Iterate all the nodes and edges
     outputGraph?.nodes.forEach((node) => {
       // If the node is the start node, turn it green with a delay
       if (node === start) {
         setTimeout(() => {
           node.color = "green";
-          setOutputGraph({ nodes: outputGraph?.nodes, edges: outputGraph?.edges });
+          setOutputGraph({
+            nodes: outputGraph?.nodes,
+            edges: outputGraph?.edges,
+          });
         }, delay);
         delay += 2000 / pathLength;
       }
@@ -122,7 +129,10 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
       else if (node === end) {
         setTimeout(() => {
           node.color = "red";
-          setOutputGraph({ nodes: outputGraph?.nodes, edges: outputGraph?.edges });
+          setOutputGraph({
+            nodes: outputGraph?.nodes,
+            edges: outputGraph?.edges,
+          });
         }, delay);
         delay += 2000 / pathLength;
       }
@@ -130,18 +140,24 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
       else if (path.includes(node.number)) {
         setTimeout(() => {
           node.color = "orange";
-          setOutputGraph({ nodes: outputGraph?.nodes, edges: outputGraph?.edges });
+          setOutputGraph({
+            nodes: outputGraph?.nodes,
+            edges: outputGraph?.edges,
+          });
         }, delay);
         delay += 2000 / pathLength;
       }
     });
-  
+
     outputGraph?.edges.forEach((edge) => {
       // If there exists an edge between two nodes in the shortest path, turn it red with a delay
       if (path.includes(edge.start.number) && path.includes(edge.end.number)) {
         setTimeout(() => {
           edge.color = "red";
-          setOutputGraph({ nodes: outputGraph?.nodes, edges: outputGraph?.edges });
+          setOutputGraph({
+            nodes: outputGraph?.nodes,
+            edges: outputGraph?.edges,
+          });
         }, delay);
         delay += 2000 / pathLength;
       }
@@ -288,6 +304,8 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
       setSelectedEdge(null);
     }
   };
+
+  console.log(routingTable);
   return (
     <div className="flex flex-col">
       <div className="flex flex-col m-10">
@@ -365,79 +383,76 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         <div className="flex flex-row justify-center">
           {/* dropdown menu that has all the nodes */}
           <Select
-  className="w-1/3 m-5"
-  options={nodes.map((node) => ({
-    value: node.number,
-    label: node.number,
-    node: node,
-  }))}
-  styles={{
-    control: (provided) => ({
-      ...provided,
-      backgroundColor: 'green',
-      borderColor: 'green',
-      '&:hover': {
-        borderColor: 'green'
-      },
-      color: 'white' // Add this line to change the text color
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: 'white' // Add this line to change the text color
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      color: 'black',
-      backgroundColor: state.isFocused ? '#b7e4b7' : 'white',
-      '&:hover': {
-        backgroundColor: '#b7e4b7'
-      }
-    }),
-  }}
-  placeholder="Start Node"
-  onChange={(e) => {
-    setStartNode(e?.value);
-  }}
-/>
+            className="w-1/3 m-5"
+            options={nodes.map((node) => ({
+              value: node.number,
+              label: node.number,
+              node: node,
+            }))}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                backgroundColor: "green",
+                borderColor: "green",
+                "&:hover": {
+                  borderColor: "green",
+                },
+                color: "white", // Add this line to change the text color
+              }),
+              singleValue: (provided) => ({
+                ...provided,
+                color: "white", // Add this line to change the text color
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                color: "black",
+                backgroundColor: state.isFocused ? "#b7e4b7" : "white",
+                "&:hover": {
+                  backgroundColor: "#b7e4b7",
+                },
+              }),
+            }}
+            placeholder="Start Node"
+            onChange={(e) => {
+              setStartNode(e?.value);
+            }}
+          />
 
-
-
-
-<Select
-  className="w-1/3 m-5"
-  options={nodes.map((node) => ({
-    value: node.number,
-    label: node.number,
-    node: node,
-  }))}
-  styles={{
-    control: (provided) => ({
-      ...provided,
-      backgroundColor: 'red',
-      borderColor: 'red',
-      '&:hover': {
-        borderColor: 'red'
-      },
-      color: 'white' // Add this line to change the text color
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: 'white' // Add this line to change the text color
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      color: 'black',
-      backgroundColor: state.isFocused ? '#f9d6d6' : 'white',
-      '&:hover': {
-        backgroundColor: '#f9d6d6'
-      }
-    }),
-  }}
-  placeholder="End Node"
-  onChange={(e) => {
-    setEndNode(e?.value);
-  }}
-/>
+          <Select
+            className="w-1/3 m-5"
+            options={nodes.map((node) => ({
+              value: node.number,
+              label: node.number,
+              node: node,
+            }))}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                backgroundColor: "red",
+                borderColor: "red",
+                "&:hover": {
+                  borderColor: "red",
+                },
+                color: "white", // Add this line to change the text color
+              }),
+              singleValue: (provided) => ({
+                ...provided,
+                color: "white", // Add this line to change the text color
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                color: "black",
+                backgroundColor: state.isFocused ? "#f9d6d6" : "white",
+                "&:hover": {
+                  backgroundColor: "#f9d6d6",
+                },
+              }),
+            }}
+            placeholder="End Node"
+            onChange={(e) => {
+              setEndNode(e?.value);
+            }}
+          />
         </div>
         <button
           className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-10 rounded mx-5 "
