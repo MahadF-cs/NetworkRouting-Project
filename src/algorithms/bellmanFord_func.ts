@@ -20,11 +20,6 @@ function convertObjectToEdgesList(graph) {
 	return edgesList;
 }
 
-// function printDistanceArray(distance) {
-//   for (var i = 0; i < distance.length; i++) {
-//     console.log("distance[" + i + "] = " + distance[i]);
-//   }
-// }
 function printDistanceArray2D(distance) {
 	for (var i = 0; i < distance.length; i++) {
 		console.log(i, ": ", distance[i]);
@@ -35,7 +30,6 @@ function shortestPath(graph, distance, source, end){
     var currentNode = source;
     var traversedNodes = [source];
     var edgeExists = false;
-    // var distanceToGo = distance[source][end];
     var smallest = distance[source][end];
     var smallestNode = -1;
     while (currentNode != end){
