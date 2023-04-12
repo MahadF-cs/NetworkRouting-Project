@@ -74,7 +74,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
       updateOutputCanvas();
       updateUserCanvas();
     }
-  }, [nodes, edges, djikstra, bellmanFord]);
+  }, [nodes, edges, djikstra, bellmanFord, outputGraph]);
 
   const findNodefromNumber = (number: number) => {
     return nodes.find((node) => node.number === number);
