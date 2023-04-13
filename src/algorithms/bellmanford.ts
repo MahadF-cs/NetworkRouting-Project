@@ -72,11 +72,11 @@ function BellmanFordAlgorithm(graph, source_node_number, target_node_number?) {
 	// another visualisation step can be added here for update neighbor steps
 	
 	for (var i = 0; i < num_vertices; i++){
-		console.log(i, distance);
+		// console.log(i, distance);
 		distance = updateDistances();
 	}
 
-	if (target_node_number) {
+	if (target_node_number >= 0) {
 		return { distance: distance, path: shortestPath(graph, distance, source_node_number, target_node_number) };
 	}
 
