@@ -32,6 +32,9 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
   const canvasRefUser = useRef<HTMLCanvasElement | null>(null);
   const canvasRefOutput = useRef<HTMLCanvasElement | null>(null);
 
+  const [doneOnce, setDone] = useState<boolean>(false);
+
+
   useEffect(() => {
     if (djikstra || bellmanFord) {
       updateOutputCanvas();
@@ -100,6 +103,9 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
   };
 
   const outLineShortestPath = (start: Node, end: Node) => {
+    if(doneOnce){
+      return;
+    }
     setOutputGraph({
       nodes: nodes,
       edges: edges,
@@ -161,6 +167,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         }, delay);
         delay += 2000 / pathLength;
       }
+      setDone(true);
     });
   };
 
