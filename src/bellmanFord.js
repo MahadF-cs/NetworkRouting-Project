@@ -64,7 +64,7 @@ function BellmanFord(graph, source_node_number, end_node_number) {
 	printDistanceArray2D(distance);
 
 	
-	console.log(shortestPath(graph, distance, source_node_number, end_node_number))
+	// console.log(shortestPath(graph, distance, source_node_number, end_node_number))
 }
 
 function updateDistances(distance){
@@ -96,31 +96,31 @@ function updateDistances(distance){
 }
 
 
-function shortestPath(graph, distance, source, end){
-	var currentNode = source;
-	var traversedNodes = [source];
-	var smallest = distance[source][end];
-	var smallestNode = -1;
-	while (currentNode != end){
-		for (var col = 0; col < distance.length; col++) {
-			for(var i = 0; i < graph.num_edges; i++){
-				if(graph.edges[i].start.number == currentNode && graph.edges[i].end.number == col || 
-                    graph.edges[i].start.number == col && graph.edges[i].end.number == currentNode){
-					if(distance[col][end] <= smallest 
-                        && !traversedNodes.includes(col)){
-                        smallest = distance[col][end];
-                        smallestNode = col;
-                    }
-				}
-			}
-		}
-		currentNode = smallestNode;
-		traversedNodes.push(smallestNode);
-	}
-	return traversedNodes;
-}
+// function shortestPath(graph, distance, source, end){
+// 	var currentNode = source;
+// 	var traversedNodes = [source];
+// 	var smallest = distance[source][end];
+// 	var smallestNode = -1;
+// 	while (currentNode != end){
+// 		for (var col = 0; col < distance.length; col++) {
+// 			for(var i = 0; i < graph.num_edges; i++){
+// 				if(graph.edges[i].start.number == currentNode && graph.edges[i].end.number == col || 
+//                     graph.edges[i].start.number == col && graph.edges[i].end.number == currentNode){
+// 					if(distance[col][end] <= smallest 
+//                         && !traversedNodes.includes(col)){
+//                         smallest = distance[col][end];
+//                         smallestNode = col;
+//                     }
+// 				}
+// 			}
+// 		}
+// 		currentNode = smallestNode;
+// 		traversedNodes.push(smallestNode);
+// 	}
+// 	return traversedNodes;
+// }
 
-BellmanFord(graph4, 0, 2);
+BellmanFord(graph1, 0, 5);
 
 //doesn't work if nodes don't start at 0,
 //need  to output the shortest path

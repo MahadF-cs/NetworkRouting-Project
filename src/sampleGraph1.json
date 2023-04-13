@@ -1,24 +1,88 @@
 {
-	"num_vertices": 2,
-	"num_edges": 1,
+	"num_vertices": 6,
+	"num_edges": 9,
 	"edges": [
 		{
 			"start": {
-				"x": 200,
-				"y": 100,
-				"radius": 20,
-				"color": "#98c1d9",
 				"number": 0
 			},
 			"end": {
-				"x": 500,
-				"y": 100,
-				"radius": 20,
-				"color": "#98c1d9",
 				"number": 1
 			},
-			"weight": 1,
-			"color": "#e07a5f"
+			"weight": 5
+		},
+		{
+			"start": {
+				"number": 0
+			},
+			"end": {
+				"number": 2
+			},
+			"weight": 2
+		},
+		{
+			"start": {
+				"number": 2
+			},
+			"end": {
+				"number": 1
+			},
+			"weight": 3
+		},
+		{
+			"start": {
+				"number": 1
+			},
+			"end": {
+				"number": 3
+			},
+			"weight": 5
+		},
+		{
+			"start": {
+				"number": 2
+			},
+			"end": {
+				"number": 4
+			},
+			"weight": 10
+		},
+		{
+			"start": {
+				"number": 3
+			},
+			"end": {
+				"number": 4
+			},
+			"weight": 4
+		},
+		{
+			"start": {
+				"number": 3
+			},
+			"end": {
+				"number": 5
+			},
+			"weight": 2
+		},
+		{
+			"start": {
+				"number": 4
+			},
+			"end": {
+				"number": 5
+			},
+			"weight": 1
+		},
+		{
+			"start": {
+				"number": 2
+			},
+			"end": {
+				"number": 3
+			},
+			"weight": 0
 		}
+		
 	]
 }
