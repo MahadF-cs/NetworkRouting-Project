@@ -34,6 +34,29 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
 
   const [doneOnce, setDone] = useState<boolean>(false);
 
+  const setPathBellman = () => {
+    const stateGraph: Graph = {
+      nodes: nodes,
+      edges: edges,
+    };
+    const start = findNodefromNumber(startNode as number);
+    const end = findNodefromNumber(endNode as number);
+    setShortestPath(
+      BellmanFordAlgorithm(stateGraph, start?.number, end?.number).path
+    );
+  }
+
+  const setPathDjikstra = () => {
+    const stateGraph: Graph = {
+      nodes: nodes,
+      edges: edges,
+    };
+    const start = findNodefromNumber(startNode as number);
+    const end = findNodefromNumber(endNode as number);
+    setShortestPath(
+      djikstraAlgorithm(stateGraph, start!, end).path
+    );
+  }
 
   useEffect(() => {
     if (djikstra || bellmanFord) {
@@ -52,7 +75,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
             routing2darray.push(result.distances);
           });
           setRoutingTable(routing2darray);
-          setShortestPath(djikstraAlgorithm(stateGraph, start, end).path);
+          // setShortestPath(djikstraAlgorithm(stateGraph, start, end).path);
           outLineShortestPath(start, end);
           updateOutputCanvas();
         }
@@ -66,9 +89,9 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
           setRoutingTable(
             BellmanFordAlgorithm(stateGraph, start.number, end.number).distance
           );
-          setShortestPath(
-            BellmanFordAlgorithm(stateGraph, start.number, end.number).path
-          );
+          // setShortestPath(
+          //   BellmanFordAlgorithm(stateGraph, start.number, end.number).path
+          // );
           outLineShortestPath(start, end);
           updateOutputCanvas();
         }
@@ -118,14 +141,16 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
     let delay = 800;
 
     // Iterate all the nodes and edges
-    outputGraph?.nodes.forEach((node) => {
+    // outputGraph?.nodes.forEach((node) => {
+      path.forEach((num) =>{
+      var node = findNodefromNumber(num as number)!;
       // If the node is the start node, turn it green with a delay
       if (node === start) {
         setTimeout(() => {
           node.color = "green";
           setOutputGraph({
-            nodes: outputGraph?.nodes,
-            edges: outputGraph?.edges,
+            nodes: outputGraph?.nodes!,
+            edges: outputGraph?.edges!,
           });
         }, delay);
         delay += 2000 / pathLength;
@@ -135,8 +160,8 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         setTimeout(() => {
           node.color = "red";
           setOutputGraph({
-            nodes: outputGraph?.nodes,
-            edges: outputGraph?.edges,
+            nodes: outputGraph?.nodes!,
+            edges: outputGraph?.edges!,
           });
         }, delay);
         delay += 2000 / pathLength;
@@ -146,8 +171,8 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         setTimeout(() => {
           node.color = "orange";
           setOutputGraph({
-            nodes: outputGraph?.nodes,
-            edges: outputGraph?.edges,
+            nodes: outputGraph?.nodes!,
+            edges: outputGraph?.edges!,
           });
         }, delay);
         delay += 2000 / pathLength;
@@ -189,15 +214,16 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
       setClear(false);
     } else {
       drawEdges(ctx);
-      drawNodes(ctx);
+      drawNodes(ctx, true);
     }
   };
 
-  const drawNodes = (ctx: CanvasRenderingContext2D) => {
+  const drawNodes = (ctx: CanvasRenderingContext2D, color = false) => {
     nodes.forEach((node, index) => {
       ctx.beginPath();
       ctx.arc(node.x, node.y, node.radius, 0, 2 * Math.PI);
       ctx.stroke();
+      if(color == true) node.color = "#98c1d9";
       ctx.fillStyle = node.color;
       ctx.fill();
       ctx.fillStyle = "white";
@@ -473,9 +499,10 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
             setBellmanFord(false);
             setAddNode(false);
             setAddEdge(false);
+            setPathDjikstra();
           }}
         >
-          Djikstra Alogrithm
+          Djikstra Algorithm
         </button>
 
         <button
@@ -485,9 +512,10 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
             setDjikstra(false);
             setAddNode(false);
             setAddEdge(false);
+            setPathBellman();
           }}
         >
-          Bell-man Ford Alogrithm
+          Bell-man Ford Algorithm
         </button>
       </div>
 
