@@ -103,9 +103,8 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
   };
 
   const outLineShortestPath = (start: Node, end: Node) => {
-    if(doneOnce){
-      return;
-    }
+    if(doneOnce) return;
+  
     setOutputGraph({
       nodes: nodes,
       edges: edges,
@@ -184,7 +183,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, width, height);
-
+    
     // if not clear draw all nodes and edges
     if (clear) {
       setClear(false);
@@ -297,10 +296,12 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
           // update the selected edge
           setSelectedEdge(edge);
           // prompt user to enter weight
-          const weight = prompt("Enter weight");
+          const weight = parseInt(prompt("Enter weight")!);
           // if weight is not null update the weight of the edge
-          if (weight !== null) {
-            edge.weight = parseInt(weight);
+          if (weight !== null && weight >= 0) {
+            edge.weight = weight;
+          }else{
+            alert("Weights must be non-negative integers")
           }
         }
       });

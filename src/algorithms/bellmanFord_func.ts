@@ -34,7 +34,6 @@ function printDistanceArray2D(distance) {
 function shortestPath(graph, distance, source, end){
     var currentNode = source;
     var traversedNodes = [source];
-    var edgeExists = false;
     // var distanceToGo = distance[source][end];
     var smallest = distance[source][end];
     var smallestNode = -1;
@@ -43,9 +42,11 @@ function shortestPath(graph, distance, source, end){
             for(var i = 0; i < graph.edges.length; i++){
                 if(graph.edges[i].start.number == currentNode && graph.edges[i].end.number == col || 
                     graph.edges[i].start.number == col && graph.edges[i].end.number == currentNode){
-                    if(
-                        smallest - distance[currentNode][col] == distance[col][end]
-                        && !traversedNodes.includes(col)){
+                    if(smallest - distance[currentNode][col] == distance[col][end]
+                        && !traversedNodes.includes(col)
+                        && graph.edges[i].weight <= distance[currentNode][col]
+                        ){
+                        console.log("Curr:", currentNode, "Next:", col, "Weight:", graph.edges[i].weight);
                         smallest = distance[col][end];
                         smallestNode = col;
                     }
@@ -54,7 +55,6 @@ function shortestPath(graph, distance, source, end){
         }
         currentNode = smallestNode;
         traversedNodes.push(smallestNode);
-        edgeExists = false;
     }
     return traversedNodes;
 }
