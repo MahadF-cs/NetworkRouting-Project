@@ -312,7 +312,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
     }
   };
 
-  console.log(routingTable);
+  // console.log(routingTable);
   return (
     <div className="flex flex-col">
       <div className="flex flex-col m-10">
@@ -332,6 +332,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               setBellmanFord(false);
               setRoutingTable([]);
               setOutputGraph(null);
+              setDone(false);
             }}
           >
             Clear
@@ -345,6 +346,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               setUpdateWeights(false);
               setDjikstra(false);
               setBellmanFord(false);
+              setDone(false);
             }}
           >
             {addNode ? "Stop" : "Add Node"}
@@ -358,6 +360,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               setUpdateWeights(false);
               setDjikstra(false);
               setBellmanFord(false);
+              setDone(false);
             }}
           >
             {addEdge ? "Stop" : "Add Edge"}
@@ -371,6 +374,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               setAddEdge(false);
               setDjikstra(false);
               setBellmanFord(false);
+              setDone(false);
             }}
           >
             {updateWeights ? "Stop" : "Update Weights"}
