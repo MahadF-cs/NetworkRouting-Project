@@ -36,7 +36,6 @@ function shortestPath(graph, distance, source, end){
         }else if(distance[currentNode][end][1] != -1){
             traversedNodes.push(distance[currentNode][end][1]);
             currentNode = (distance[currentNode][end][1]);
-            console.log(traversedNodes);
         }
     }
     return traversedNodes;
