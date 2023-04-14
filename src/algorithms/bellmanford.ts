@@ -52,11 +52,11 @@ function BellmanFordAlgorithm(graph, source_node_number, target_node_number?) {
 		for (var row = 0; row < distance.length; row++) {
 			for (var col = 0; col < distance.length; col++) {
 				// row/col has a path to n to tell neighbors about
-				if (distance[row][col] != 0 && distance[row][col] != Infinity) {
+				if (row != col && distance[row][col] != Infinity) {
 					// loop neighbors
 					for (var i = 0; i < distance.length; i++) {
 						// neighbor has path to row/col
-						if (distance[i][row] != 0 && distance[i][row] != Infinity) {
+						if (i != row && distance[i][row] != Infinity) {
 							// update neighbor if its path to n is bigger than row/col path to n + row/col's path to neighbor 
 							if (distance[i][col] > distance[row][col] + distance[i][row]) {
 								newDistance[i][col] = distance[row][col] + distance[i][row];
@@ -72,10 +72,11 @@ function BellmanFordAlgorithm(graph, source_node_number, target_node_number?) {
 	// another visualisation step can be added here for update neighbor steps
 	
 	for (var i = 0; i < num_vertices; i++){
+		// console.log(i, distance);
 		distance = updateDistances();
 	}
 
-	if (target_node_number) {
+	if (target_node_number >= 0) {
 		return { distance: distance, path: shortestPath(graph, distance, source_node_number, target_node_number) };
 	}
 

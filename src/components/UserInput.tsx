@@ -32,6 +32,32 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
   const canvasRefUser = useRef<HTMLCanvasElement | null>(null);
   const canvasRefOutput = useRef<HTMLCanvasElement | null>(null);
 
+  const [doneOnce, setDone] = useState<boolean>(false);
+
+  const setPathBellman = () => {
+    const stateGraph: Graph = {
+      nodes: nodes,
+      edges: edges,
+    };
+    const start = findNodefromNumber(startNode as number);
+    const end = findNodefromNumber(endNode as number);
+    setShortestPath(
+      BellmanFordAlgorithm(stateGraph, start?.number, end?.number).path
+    );
+  }
+
+  const setPathDjikstra = () => {
+    const stateGraph: Graph = {
+      nodes: nodes,
+      edges: edges,
+    };
+    const start = findNodefromNumber(startNode as number);
+    const end = findNodefromNumber(endNode as number);
+    setShortestPath(
+      djikstraAlgorithm(stateGraph, start!, end).path
+    );
+  }
+
   useEffect(() => {
     if (djikstra || bellmanFord) {
       updateOutputCanvas();
@@ -43,13 +69,13 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
         const start = findNodefromNumber(startNode as number);
         const end = findNodefromNumber(endNode as number);
         if (start && end) {
+          let routing2darray: any[] = [];
           nodes.forEach((node) => {
             const result = djikstraAlgorithm(stateGraph, node);
-            setRoutingTable((prev) => {
-              return [...prev, result.distances];
-            });
+            routing2darray.push(result.distances);
           });
-          setShortestPath(djikstraAlgorithm(stateGraph, start, end).path);
+          setRoutingTable(routing2darray);
+          // setShortestPath(djikstraAlgorithm(stateGraph, start, end).path);
           outLineShortestPath(start, end);
           updateOutputCanvas();
         }
@@ -60,8 +86,12 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
 
         if (start && end) {
           // the bellan ford algorithm returns the 2d array of distances
-          setRoutingTable(BellmanFordAlgorithm(stateGraph, start.number, end.number).distance);
-          setShortestPath(BellmanFordAlgorithm(stateGraph, start.number, end.number).path);
+          setRoutingTable(
+            BellmanFordAlgorithm(stateGraph, start.number, end.number).distance
+          );
+          // setShortestPath(
+          //   BellmanFordAlgorithm(stateGraph, start.number, end.number).path
+          // );
           outLineShortestPath(start, end);
           updateOutputCanvas();
         }
@@ -96,25 +126,72 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
   };
 
   const outLineShortestPath = (start: Node, end: Node) => {
+    if(doneOnce) return;
+  
     setOutputGraph({
       nodes: nodes,
       edges: edges,
     });
-    // iterate all the nodes and if they are in the shortest path turn them red
-    outputGraph?.nodes.forEach((node) => {
-      if (shortestPath?.includes(node.number)) {
-        node.color = "red";
+
+    // Get the shortest path and its length
+    const path = shortestPath ?? [];
+    const pathLength = path.length;
+
+    // Initialize the delay time to 800ms
+    let delay = 800;
+
+    // Iterate all the nodes and edges
+    // outputGraph?.nodes.forEach((node) => {
+      path.forEach((num) =>{
+      var node = findNodefromNumber(num as number)!;
+      // If the node is the start node, turn it green with a delay
+      if (node === start) {
+        setTimeout(() => {
+          node.color = "green";
+          setOutputGraph({
+            nodes: outputGraph?.nodes!,
+            edges: outputGraph?.edges!,
+          });
+        }, delay);
+        delay += 2000 / pathLength;
+      }
+      // If the node is the end node, turn it red with a delay
+      else if (node === end) {
+        setTimeout(() => {
+          node.color = "red";
+          setOutputGraph({
+            nodes: outputGraph?.nodes!,
+            edges: outputGraph?.edges!,
+          });
+        }, delay);
+        delay += 2000 / pathLength;
+      }
+      // If the node is in the shortest path but not the start or end node, turn it orange with a delay
+      else if (path.includes(node.number)) {
+        setTimeout(() => {
+          node.color = "orange";
+          setOutputGraph({
+            nodes: outputGraph?.nodes!,
+            edges: outputGraph?.edges!,
+          });
+        }, delay);
+        delay += 2000 / pathLength;
       }
     });
 
-    // iterate all the edges and if there exists an edge between two nodes in the shortest path turn it red
     outputGraph?.edges.forEach((edge) => {
-      if (
-        shortestPath?.includes(edge.start.number) &&
-        shortestPath?.includes(edge.end.number)
-      ) {
-        edge.color = "red";
+      // If there exists an edge between two nodes in the shortest path, turn it red with a delay
+      if (path.includes(edge.start.number) && path.includes(edge.end.number)) {
+        setTimeout(() => {
+          edge.color = "red";
+          setOutputGraph({
+            nodes: outputGraph?.nodes,
+            edges: outputGraph?.edges,
+          });
+        }, delay);
+        delay += 2000 / pathLength;
       }
+      setDone(true);
     });
   };
 
@@ -131,21 +208,22 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, width, height);
-
+    
     // if not clear draw all nodes and edges
     if (clear) {
       setClear(false);
     } else {
       drawEdges(ctx);
-      drawNodes(ctx);
+      drawNodes(ctx, true);
     }
   };
 
-  const drawNodes = (ctx: CanvasRenderingContext2D) => {
+  const drawNodes = (ctx: CanvasRenderingContext2D, color = false) => {
     nodes.forEach((node, index) => {
       ctx.beginPath();
       ctx.arc(node.x, node.y, node.radius, 0, 2 * Math.PI);
       ctx.stroke();
+      if(color == true) node.color = "#98c1d9";
       ctx.fillStyle = node.color;
       ctx.fill();
       ctx.fillStyle = "white";
@@ -244,10 +322,12 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
           // update the selected edge
           setSelectedEdge(edge);
           // prompt user to enter weight
-          const weight = prompt("Enter weight");
+          const weight = parseInt(prompt("Enter weight")!);
           // if weight is not null update the weight of the edge
-          if (weight !== null) {
-            edge.weight = parseInt(weight);
+          if (weight !== null && weight >= 0) {
+            edge.weight = weight;
+          }else{
+            alert("Weights must be non-negative integers")
           }
         }
       });
@@ -259,6 +339,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
     }
   };
 
+  // console.log(routingTable);
   return (
     <div className="flex flex-col">
       <div className="flex flex-col m-10">
@@ -278,6 +359,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               setBellmanFord(false);
               setRoutingTable([]);
               setOutputGraph(null);
+              setDone(false);
             }}
           >
             Clear
@@ -291,6 +373,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               setUpdateWeights(false);
               setDjikstra(false);
               setBellmanFord(false);
+              setDone(false);
             }}
           >
             {addNode ? "Stop" : "Add Node"}
@@ -304,6 +387,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               setUpdateWeights(false);
               setDjikstra(false);
               setBellmanFord(false);
+              setDone(false);
             }}
           >
             {addEdge ? "Stop" : "Add Edge"}
@@ -317,6 +401,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               setAddEdge(false);
               setDjikstra(false);
               setBellmanFord(false);
+              setDone(false);
             }}
           >
             {updateWeights ? "Stop" : "Update Weights"}
@@ -342,11 +427,27 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               label: node.number,
               node: node,
             }))}
-            // change style color of options to black instead of white
             styles={{
+              control: (provided) => ({
+                ...provided,
+                backgroundColor: "green",
+                borderColor: "green",
+                "&:hover": {
+                  borderColor: "green",
+                },
+                color: "white", // Add this line to change the text color
+              }),
+              singleValue: (provided) => ({
+                ...provided,
+                color: "white", // Add this line to change the text color
+              }),
               option: (provided, state) => ({
                 ...provided,
                 color: "black",
+                backgroundColor: state.isFocused ? "#b7e4b7" : "white",
+                "&:hover": {
+                  backgroundColor: "#b7e4b7",
+                },
               }),
             }}
             placeholder="Start Node"
@@ -362,11 +463,27 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
               label: node.number,
               node: node,
             }))}
-            // change style color of options to black instead of white
             styles={{
+              control: (provided) => ({
+                ...provided,
+                backgroundColor: "red",
+                borderColor: "red",
+                "&:hover": {
+                  borderColor: "red",
+                },
+                color: "white", // Add this line to change the text color
+              }),
+              singleValue: (provided) => ({
+                ...provided,
+                color: "white", // Add this line to change the text color
+              }),
               option: (provided, state) => ({
                 ...provided,
                 color: "black",
+                backgroundColor: state.isFocused ? "#f9d6d6" : "white",
+                "&:hover": {
+                  backgroundColor: "#f9d6d6",
+                },
               }),
             }}
             placeholder="End Node"
@@ -382,9 +499,10 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
             setBellmanFord(false);
             setAddNode(false);
             setAddEdge(false);
+            setPathDjikstra();
           }}
         >
-          Djikstra Alogrithm
+          Djikstra Algorithm
         </button>
 
         <button
@@ -394,9 +512,10 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
             setDjikstra(false);
             setAddNode(false);
             setAddEdge(false);
+            setPathBellman();
           }}
         >
-          Bell-man Ford Alogrithm
+          Bell-man Ford Algorithm
         </button>
       </div>
 
@@ -438,6 +557,7 @@ const UserInput: React.FC<UserInputProps> = ({ width, height }) => {
                   ))}
                 </tbody>
               </table>
+              <p>Shortest path: {shortestPath && shortestPath.join(" -> ")}</p>
             </div>
           </div>
         </div>

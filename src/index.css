@@ -62,7 +62,8 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background: linear-gradient(to bottom right, #ff0080, #ff8c00, #ffee00, #32cd32, #00bfff, #8b00ff);
+  
   }
   a:hover {
     color: #747bff;
@@ -118,8 +119,18 @@ h1 {
   font-size: 2.2rem;
   font-weight: bold;
   text-align: center;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
   text-shadow: 1px 1px 1px #ccc;
   color: #8a2be2;
+}
+p {
+  color: #00ff37;
+  font-size: 18px;
+  line-height: 1.5;
+  background-color: #a25aa5;
+  padding: 10px;
+  border: 1px solid #00ff6a;
+  border-radius: 5px;
+  font-weight: bold;
 }
