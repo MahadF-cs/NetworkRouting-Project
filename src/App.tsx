@@ -14,9 +14,11 @@ function App() {
 			<h1>Dijkstra vs Bellman Ford</h1>
 			<UserInput width={WIDTH} height={HEIGHT} />
 			<br></br>
-			<YouTubeEmbed embedId="rokGy0huYEA" />
+			<YouTubeEmbed embedId="R33Xw9wsPOE" />
 			<br></br>
-			<YouTubeEmbed embedId="EqboAI-Vk-U" />
+			<YouTubeEmbed embedId="LMV3axOknS4" />
+			<br></br>
+			<YouTubeEmbed embedId="wgQNNnu4wT0" />
 			<br></br>
 		</div>
 	);
