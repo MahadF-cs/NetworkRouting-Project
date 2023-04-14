@@ -29,26 +29,15 @@ function printDistanceArray2D(distance) {
 function shortestPath(graph, distance, source, end){
     var currentNode = source;
     var traversedNodes = [source];
-    var smallest = distance[source][end];
-    var smallestNode = -1;
     while (currentNode != end){
-        for (var col = 0; col < distance.length; col++) {
-            for(var i = 0; i < graph.edges.length; i++){
-                if(graph.edges[i].start.number == currentNode && graph.edges[i].end.number == col || 
-                    graph.edges[i].start.number == col && graph.edges[i].end.number == currentNode){
-                    if(smallest - distance[currentNode][col] == distance[col][end]
-                        && !traversedNodes.includes(col)
-                        && graph.edges[i].weight <= distance[currentNode][col]
-                        ){
-                        // console.log("Curr:", currentNode, "Next:", col, "Weight:", graph.edges[i].weight);
-                        smallest = distance[col][end];
-                        smallestNode = col;
-                    }
-                }
-            }
+        if(distance[currentNode][end][1] == -1){
+            traversedNodes.push(end);
+            currentNode = end;
+        }else if(distance[currentNode][end][1] != -1){
+            traversedNodes.push(distance[currentNode][end][1]);
+            currentNode = (distance[currentNode][end][1]);
+            console.log(traversedNodes);
         }
-        currentNode = smallestNode;
-        traversedNodes.push(smallestNode);
     }
     return traversedNodes;
 }
